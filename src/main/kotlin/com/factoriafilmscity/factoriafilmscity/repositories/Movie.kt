@@ -6,13 +6,9 @@ import jakarta.persistence.*
 @Entity
 data class Movie(
         var title: String,
-        var coverImage: String,
-        var director: String,
-        var year: Int,
-        var synopsis: String,
 
        @Id
        @GeneratedValue(strategy = GenerationType.IDENTITY)
-       @Column(title = "id", nullable = false)
+       @Column(name = "id", nullable = false)
        var id: Long? = null
 )

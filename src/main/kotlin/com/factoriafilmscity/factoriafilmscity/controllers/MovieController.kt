@@ -1,2 +1,2 @@
-package controllers
+package com.factoriafilmscity.factoriafilmscity.controllers
 
