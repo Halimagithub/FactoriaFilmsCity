@@ -85,13 +85,7 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
     @Test
     @Throws(Exception::class)
     fun `allows to find a movie by id`() {
-        val movie: Movie = movieRepository.save(
-            Movie(
-                "Megalodón2: La Trinchera",
-                "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0",
-                "Ben Wheatley",
-                "Secuela de 'The Meg' (2018).",
-                2023))
+        val movie: Movie = movieRepository.save(Movie("Megalodón2: La Trinchera", "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0", "Ben Wheatley", "Secuela de 'The Meg' (2018).", 2023))
         mockMvc.perform(get("/movies/" + movie.id))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.title", equalTo("Megalodón2: La Trinchera")))
@@ -104,7 +98,7 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
     @Test
     @Throws(Exception::class)
     fun `returns an error if trying to get a movie that does not exist`() {
-        mockMvc.perform(get("/movies/1"))
+        mockMvc.perform(get("/movies/"))
             .andExpect(status().isNotFound())
     }
 
