@@ -128,4 +128,33 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
         )
         movies.forEach(movieRepository::save)
     }
+    @Test
+    @Throws(Exception::class)
+    fun `allows to delete a movie by id`() {
+        val movie: Movie = movieRepository.save(Movie("Megalodón2: La Trinchera", "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0", "Ben Wheatley", "Secuela de 'The Meg' (2018).", 2023))
+        mockMvc.perform(delete("/movies/" + movie.id))
+            .andExpect(status().isOk)
+        val movies: List<Movie> = movieRepository.findAll()
+        assertThat(
+            movies, not(
+                contains(
+                    allOf(
+                        hasProperty("title", `is`("Megalodón2: La Trinchera")),
+                        hasProperty("CoverImage", `is`("https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0")),
+                        hasProperty("director", `is`("Ben Wheatley")),
+                        hasProperty("synopsis", `is`("Secuela de 'The Meg' (2018).")),
+                        hasProperty("releaseYear", `is`(2023))
+                    )
+                )
+            )
+        )
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `returns an error if trying to delete a coder that does not exist`() {
+        mockMvc.perform(delete("/coders/1"))
+            .andExpect(status().isNotFound())
+    }
+
 }
