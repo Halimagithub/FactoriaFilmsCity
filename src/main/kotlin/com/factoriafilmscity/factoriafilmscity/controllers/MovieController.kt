@@ -22,6 +22,7 @@ class MovieController(private val movieRepository: MovieRepository) {
     fun addMovie(@RequestBody movie: Movie): Movie? {
         return movieRepository.save(movie)
     }
+
     @DeleteMapping("/movies/{id}")
     fun deleteMovieById(@PathVariable id: Long): Movie? {
         val movie: Movie = movieRepository.findById(id).orElseThrow { MovieNotFoundException() }
@@ -29,10 +30,17 @@ class MovieController(private val movieRepository: MovieRepository) {
         return movie
     }
 
+    @PutMapping("/movies")
+    fun updateMovieById(@RequestBody movie: Movie): Movie? {
+        movie.id?.let { movieRepository.findById(it).orElseThrow { MovieNotFoundException() } }
+        return movieRepository.save(movie)
+    }
+}
+
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "movie not found")
     class MovieNotFoundException : RuntimeException()
-}
+
 
 
 
