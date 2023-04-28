@@ -43,16 +43,19 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
             .andExpect(jsonPath("$[0].director", equalTo("Ben Wheatley")))
             .andExpect(jsonPath("$[0].synopsis", equalTo("Secuela de 'The Meg' (2018).")))
             .andExpect(jsonPath("$[0].releaseYear", equalTo(2023)))
+            .andExpect(jsonPath("$[0].gender", equalTo("Ciencia ficción, acción, terror, suspense")))
             .andExpect(jsonPath("$[1].title", equalTo("Stab Who Scream")))
             .andExpect(jsonPath("$[1].coverImage", equalTo("https://tse3.mm.bing.net/th?id=OIP.bjG2hBPKMjso0Mu9KneuCAHaLP&pid=Api&P=0")))
             .andExpect(jsonPath("$[1].director", equalTo("Roberto Rodríguez")))
             .andExpect(jsonPath("$[1].synopsis", equalTo("Stab Who Scream")))
             .andExpect(jsonPath("$[1].releaseYear", equalTo(2023)))
+            .andExpect(jsonPath("$[1].gender", equalTo("Terror y misterio")))
             .andExpect(jsonPath("$[2].title", equalTo("OPPENHEIMER")))
             .andExpect(jsonPath("$[2].coverImage", equalTo("https://tse1.mm.bing.net/th?id=OIP.n_wf-b7Pp4h-gP3a9meQAAHaLu&pid=Api&P=0")))
             .andExpect(jsonPath("$[2].director", equalTo("Christopher Nolan")))
             .andExpect(jsonPath("$[2].synopsis", equalTo("Christopher Nolan se encarga de dirigir este filme centrado en la figura de J. Robert Oppenheimer, el hombre que desarrolló la bomba atómica.")))
             .andExpect(jsonPath("$[2].releaseYear", equalTo(2023)))
+            .andExpect(jsonPath("$[2].gender", equalTo("Drama e historia")))
             .andDo(print())
     }
 
@@ -63,7 +66,7 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
         mockMvc.perform(
             post("/movies")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"title\": \"Megalodón2: La Trinchera\", \"coverImage\": \"https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0\", \"director\": \"Ben Wheatley\", \"synopsis\": \"Secuela de 'The Meg' (2018).\", \"releaseYear\": 2023}")
+                .content("{\"title\": \"Megalodón2: La Trinchera\", \"coverImage\": \"https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0\", \"director\": \"Ben Wheatley\", \"synopsis\": \"Secuela de 'The Meg' (2018).\", \"releaseYear\": 2023, \"gender\": \"Ciencia ficción, acción, terror, suspense\" }")
         ).andExpect(status().isOk)
         val movies: List<Movie> = movieRepository.findAll()
         assertThat(
@@ -73,7 +76,8 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
                     hasProperty("coverImage", `is`("https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0")),
                     hasProperty("director", `is`("Ben Wheatley")),
                     hasProperty("synopsis", `is`("Secuela de 'The Meg' (2018).")),
-                    hasProperty("releaseYear", `is`(2023))
+                    hasProperty("releaseYear", `is`(2023)),
+                    hasProperty("gender",`is`("Ciencia ficción, acción, terror, suspense"))
                     )
             )
         )
@@ -82,7 +86,7 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
     @Test
     @Throws(Exception::class)
     fun `allows to find a movie by id`() {
-        val movie: Movie = movieRepository.save(Movie("Megalodón2: La Trinchera", "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0", "Ben Wheatley", "Secuela de 'The Meg' (2018).", 2023))
+        val movie: Movie = movieRepository.save(Movie("Megalodón2: La Trinchera", "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0", "Ben Wheatley", "Secuela de 'The Meg' (2018).", 2023, "Ciencia ficción, acción, terror, suspense"))
         mockMvc.perform(get("/movies/" + movie.id))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.title", equalTo("Megalodón2: La Trinchera")))
@@ -90,6 +94,7 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
             .andExpect(jsonPath("$.director", equalTo("Ben Wheatley")))
             .andExpect(jsonPath("$.synopsis", equalTo("Secuela de 'The Meg' (2018).")))
             .andExpect(jsonPath("$.releaseYear", equalTo(2023)))
+            .andExpect(jsonPath("$.gender", equalTo("Ciencia ficción, acción, terror, suspense")))
     }
 
     @Test
@@ -106,21 +111,25 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
                 "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0",
                 "Ben Wheatley",
                 "Secuela de 'The Meg' (2018).",
-                2023
+                2023,
+                "Ciencia ficción, acción, terror, suspense"
             ),
             Movie(
                 "Stab Who Scream",
                 "https://tse3.mm.bing.net/th?id=OIP.bjG2hBPKMjso0Mu9KneuCAHaLP&pid=Api&P=0",
                 "Roberto Rodríguez",
                 "Stab Who Scream",
-                2023
+                2023,
+                "Terror y misterio"
+
             ),
             Movie(
                 "OPPENHEIMER",
                 "https://tse1.mm.bing.net/th?id=OIP.n_wf-b7Pp4h-gP3a9meQAAHaLu&pid=Api&P=0",
                 "Christopher Nolan",
                 "Christopher Nolan se encarga de dirigir este filme centrado en la figura de J. Robert Oppenheimer, el hombre que desarrolló la bomba atómica.",
-                2023
+                2023,
+                "Drama e historia"
             )
         )
         movies.forEach(movieRepository::save)
@@ -128,7 +137,7 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
     @Test
     @Throws(Exception::class)
     fun `allows to delete a movie by id`() {
-        val movie: Movie = movieRepository.save(Movie("Megalodón2: La Trinchera", "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0", "Ben Wheatley", "Secuela de 'The Meg' (2018).", 2023))
+        val movie: Movie = movieRepository.save(Movie("Megalodón2: La Trinchera", "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0", "Ben Wheatley", "Secuela de 'The Meg' (2018).", 2023,"Ciencia ficción, acción, terror, suspense"))
         mockMvc.perform(delete("/movies/" + movie.id))
             .andExpect(status().isOk)
         val movies: List<Movie> = movieRepository.findAll()
@@ -140,7 +149,8 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
                         hasProperty("CoverImage", `is`("https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0")),
                         hasProperty("director", `is`("Ben Wheatley")),
                         hasProperty("synopsis", `is`("Secuela de 'The Meg' (2018).")),
-                        hasProperty("releaseYear", `is`(2023))
+                        hasProperty("releaseYear", `is`(2023)),
+                        hasProperty("gender", `is`("Ciencia ficción, acción, terror, suspense"))
                     )
                 )
             )
@@ -150,17 +160,17 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
     @Test
     @Throws(Exception::class)
     fun `returns an error if trying to delete a coder that does not exist`() {
-        mockMvc.perform(delete("/coders/1"))
+        mockMvc.perform(delete("/movies/1"))
             .andExpect(status().isNotFound())
     }
     @Test
     @Throws(Exception::class)
     fun `allows to modify a movie`() {
-        val movie: Movie = movieRepository.save(Movie("Megalodón2: La Trinchera", "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0", "Ben Wheatley", "Secuela de 'The Meg' (2018).", 2023))
+        val movie: Movie = movieRepository.save(Movie("Megalodón2: La Trinchera", "https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0", "Ben Wheatley", "Secuela de 'The Meg' (2018).", 2023,"Ciencia ficción, acción, terror, suspense"))
         mockMvc.perform(
             put("/movies")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\": \"" + movie.id + "\", \"title\": \"Megalodón2: La Trinchera\", \"coverImage\": \"https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0\", \"director\": \"Ben Wheatley\", \"synopsis\": \"Secuela de 'The Meg' (2018).\", \"releaseYear\": 2023}")
+                .content("{\"id\": \"" + movie.id + "\", \"title\": \"Megalodón2: La Trinchera\", \"coverImage\": \"https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0\", \"director\": \"Ben Wheatley\", \"synopsis\": \"Secuela de 'The Meg' (2018).\", \"releaseYear\": 2023, \"gender\": \"Ciencia ficción, acción, terror, suspense\"}")
         ).andExpect(status().isOk)
         val movies: List<Movie> = movieRepository.findAll()
         assertThat(movies, hasSize(1))
@@ -169,6 +179,7 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
         assertThat(movies[0].director, equalTo("Ben Wheatley"))
         assertThat(movies[0].synopsis, equalTo("Secuela de 'The Meg' (2018)."))
         assertThat(movies[0].releaseYear, equalTo(2023))
+        assertThat(movies[0].gender, equalTo("Ciencia ficción, acción, terror, suspense"))
 
     }
 
@@ -179,7 +190,7 @@ class FactoriafilmscityApplicationTests(@Autowired val mockMvc: MockMvc) {
         mockMvc.perform(
             put("/movies")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\": \"" + -1 + "\", \"title\": \"Megalodón2: La Trinchera\", \"coverImage\": \"https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0\", \"director\": \"Ben Wheatley\", \"synopsis\": \"Secuela de 'The Meg' (2018).\", \"releaseYear\": 2023}")
+                .content("{\"id\": \"" + -1 + "\", \"title\": \"Megalodón2: La Trinchera\", \"coverImage\": \"https://tse2.mm.bing.net/th?id=OIP.y749OBQqVZxIPEtYcXBxIQHaLH&pid=Api&P=0\", \"director\": \"Ben Wheatley\", \"synopsis\": \"Secuela de 'The Meg' (2018).\", \"releaseYear\": 2023, \"gender\": \"Ciencia ficción, acción, terror, suspense\" }")
         ).andExpect(status().isNotFound())
     }
 }

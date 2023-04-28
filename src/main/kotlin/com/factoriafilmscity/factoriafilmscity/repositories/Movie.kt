@@ -11,6 +11,7 @@ data class Movie(
         var director: String,
         var synopsis: String,
         var releaseYear: Int,
+        var gender: String,
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
